@@ -1,40 +1,55 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import myContext from '../../context/data/myContext';
 import Layout from '../../components/layout/Layout';
 import Modal from '../../components/modal/Modal';
-import {useDispatch, useSelector} from 'react-redux';
-import {deleteFromCart} from '../../redux/cartSlice';
-import {toast} from 'react-toastify';
-import {addDoc, collection} from 'firebase/firestore';
-import {fireDB} from '../../fireabase/FirebaseConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteFromCart, deleteItemFromCart, addToCart } from '../../redux/cartSlice';
+import { toast } from 'react-toastify';
+import { addDoc, collection } from 'firebase/firestore';
+import { fireDB } from '../../fireabase/FirebaseConfig';
 
 function Cart() {
+
+  const [totalAmout, setTotalAmount] = useState(0);
+
   const context = useContext(myContext);
-  const {mode} = context;
+  const { mode } = context;
 
   const dispatch = useDispatch();
 
   const cartItems = useSelector(state => state.cart);
-  console.log(cartItems);
 
   const deleteCart = item => {
     dispatch(deleteFromCart(item));
     toast.success('Delete cart');
   };
 
+  const deleteCartItem = (item) =>{
+    dispatch(deleteItemFromCart(item));
+    toast.success('Delete cart item');
+  }
+
+  const addCart = (products) => {
+    const itemObject = {
+        ...products,
+        quantity: 1
+    }
+    dispatch(addToCart(itemObject))
+    toast.success('item added');
+  }
+
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const [totalAmout, setTotalAmount] = useState(0);
 
   useEffect(() => {
     let temp = 0;
-    cartItems.forEach(cartItem => {
+    cartItems.items.forEach(cartItem => {
       temp = temp + parseInt(cartItem.price);
     });
     setTotalAmount(temp);
-    console.log(temp);
+    // console.log(temp);
   }, [cartItems]);
 
   const shipping = parseInt(100);
@@ -53,74 +68,74 @@ function Cart() {
 
   const buyNow = async () => {
 
-      if (name === '' || address == '' || pincode == '' || phoneNumber == '') {
-        return toast.error('All fields are required', {
-          position: 'top-center',
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'colored',
-        });
-      }
+    if (name === '' || address == '' || pincode == '' || phoneNumber == '') {
+      return toast.error('All fields are required', {
+        position: 'top-center',
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
 
-      const addressInfo = {
-        name,
-        address,
-        pincode,
-        phoneNumber,
-        date: new Date().toLocaleString('en-US', {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-        }),
-      };
+    const addressInfo = {
+      name,
+      address,
+      pincode,
+      phoneNumber,
+      date: new Date().toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      }),
+    };
 
-      var options = {
-        key: 'rzp_test_du8jJUxQb7hup4',
-        key_secret: 'rzp_test_du8jJUxQb7hup4',
-        amount: parseInt(grandTotal * 100),
-        currency: 'INR',
-        order_receipt: 'order_rcptid_' + name,
-        name: 'Velle',
-        description: 'for testing purpose',
-        handler: function (response) {
-          console.log(response);
-          toast.success('Payment Successful');
+    var options = {
+      key: 'rzp_test_du8jJUxQb7hup4',
+      key_secret: 'rzp_test_du8jJUxQb7hup4',
+      amount: parseInt(grandTotal * 100),
+      currency: 'INR',
+      order_receipt: 'order_rcptid_' + name,
+      name: 'Velle',
+      description: 'for testing purpose',
+      handler: function (response) {
+        // console.log(response);
+        toast.success('Payment Successful');
 
-          const paymentId = response.razorpay_payment_id;
+        const paymentId = response.razorpay_payment_id;
 
-          const orderInfo = {
-            cartItems,
-            addressInfo,
-            date: new Date().toLocaleString('en-US', {
-              month: 'short',
-              day: '2-digit',
-              year: 'numeric',
-            }),
-            email: JSON.parse(localStorage.getItem('user')).user.email,
-            userid: JSON.parse(localStorage.getItem('user')).user.uid,
-            paymentId,
-          };
+        const orderInfo = {
+          cartItems,
+          addressInfo,
+          date: new Date().toLocaleString('en-US', {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric',
+          }),
+          email: JSON.parse(localStorage.getItem('user')).user.email,
+          userid: JSON.parse(localStorage.getItem('user')).user.uid,
+          paymentId,
+        };
 
-          try {
-            const orderRef = collection(fireDB, 'order');
-            addDoc(orderRef, orderInfo);
-          } catch (error) {
-            console.log(error);
-          }
-        },
+        try {
+          const orderRef = collection(fireDB, 'order');
+          addDoc(orderRef, orderInfo);
+        } catch (error) {
+          // console.log(error);
+        }
+      },
 
-        theme: {
-          color: '#3399cc',
-        },
-      };
+      theme: {
+        color: '#3399cc',
+      },
+    };
 
-      var pay = new window.Razorpay(options);
-      pay.open();
-    
+    var pay = new window.Razorpay(options);
+    pay.open();
+
   };
   return (
     <Layout>
@@ -133,8 +148,8 @@ function Cart() {
         <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
         <div className="mx-auto max-w-5xl justify-center px-6 md:flex md:space-x-6 xl:px-0 ">
           <div className="rounded-lg md:w-2/3 ">
-            {cartItems.map((item, index) => {
-              const {title, price, description, imageUrl} = item;
+            {cartItems.items.length > 0 && cartItems.items.map((item, index) => {
+              const { title, price, description, imageUrl } = item;
               return (
                 <div
                   className="justify-between mb-6 rounded-lg border  drop-shadow-xl bg-white p-6  sm:flex  sm:justify-start"
@@ -151,19 +166,46 @@ function Cart() {
                     <div className="mt-5 sm:mt-0">
                       <h2
                         className="text-lg font-bold text-gray-900"
-                        style={{color: mode === 'dark' ? 'white' : ''}}>
+                        style={{ color: mode === 'dark' ? 'white' : '' }}>
                         {title}
                       </h2>
                       <h2
                         className="text-sm  text-gray-900"
-                        style={{color: mode === 'dark' ? 'white' : ''}}>
+                        style={{ color: mode === 'dark' ? 'white' : '' }}>
                         {description}
                       </h2>
                       <p
                         className="mt-1 text-xs font-semibold text-gray-700"
-                        style={{color: mode === 'dark' ? 'white' : ''}}>
+                        style={{ color: mode === 'dark' ? 'white' : '' }}>
                         ₹{price}
                       </p>
+
+                      <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "30px" }}>
+                        <button style={{
+                          padding: "0px 10px",
+                          backgroundColor: "lightgreen",
+                          border: "1px solid green",
+                          borderRadius: "5px",
+                          fontSize: "14px"
+                        }}
+                          onClick={()=>{addCart(item)}}
+                        >
+                          +</button>
+
+                        <div>{cartItems.items[index].quantity}</div>
+
+                        <button
+                          style={{
+                            padding: "0px 10px",
+                            backgroundColor: "#ffcccb",
+                            border: "1px solid red",
+                            borderRadius: "5px",
+                            fontSize: "14px"
+                          }}
+                          onClick={()=>{deleteCartItem(item)}}
+                        >-</button>
+                      </div>
+
                     </div>
                     <div
                       onClick={() => deleteCart(item)}
@@ -197,24 +239,24 @@ function Cart() {
             <div className="mb-2 flex justify-between">
               <p
                 className="text-gray-700"
-                style={{color: mode === 'dark' ? 'white' : ''}}>
+                style={{ color: mode === 'dark' ? 'white' : '' }}>
                 Subtotal
               </p>
               <p
                 className="text-gray-700"
-                style={{color: mode === 'dark' ? 'white' : ''}}>
+                style={{ color: mode === 'dark' ? 'white' : '' }}>
                 ₹{totalAmout}
               </p>
             </div>
             <div className="flex justify-between">
               <p
                 className="text-gray-700"
-                style={{color: mode === 'dark' ? 'white' : ''}}>
+                style={{ color: mode === 'dark' ? 'white' : '' }}>
                 Shipping
               </p>
               <p
                 className="text-gray-700"
-                style={{color: mode === 'dark' ? 'white' : ''}}>
+                style={{ color: mode === 'dark' ? 'white' : '' }}>
                 ₹{shipping}
               </p>
             </div>
@@ -222,13 +264,13 @@ function Cart() {
             <div className="flex justify-between mb-3">
               <p
                 className="text-lg font-bold"
-                style={{color: mode === 'dark' ? 'white' : ''}}>
+                style={{ color: mode === 'dark' ? 'white' : '' }}>
                 Total
               </p>
               <div className>
                 <p
                   className="mb-1 text-lg font-bold"
-                  style={{color: mode === 'dark' ? 'white' : ''}}>
+                  style={{ color: mode === 'dark' ? 'white' : '' }}>
                   ₹{grandTotal}
                 </p>
               </div>

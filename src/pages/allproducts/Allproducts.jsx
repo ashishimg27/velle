@@ -15,11 +15,15 @@ function Allproducts() {
   const cartItems = useSelector((state)=> state.cart);
   console.log(cartItems)
 
-  const addCart = (product)=> {
-      dispatch(addToCart(product));
-      toast.success('add to cart');
-
-  }
+  const addCart = (products) => {
+    console.log("all product cart")
+    const itemObject = {
+        ...products,
+        quantity: 1
+    }
+    dispatch(addToCart(itemObject))
+    toast.success('add to cart');
+    }
 
   useEffect(() => {
       localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -55,7 +59,7 @@ function Allproducts() {
                                         {/* <p className="leading-relaxed mb-3">{item.description.}</p> */}
                                         <p className="leading-relaxed mb-3" style={{ color: mode === 'dark' ? 'white' : '' }}>₹{price}</p>
                                         <div className=" flex justify-center">
-                                            <button type="button" 
+                                            <button type="button"
                                             onClick={()=> addCart(item)}
                                             className="focus:outline-none text-white bg-pink-600 hover:bg-pink-700 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm w-full  py-2">Add To Cart</button>
 

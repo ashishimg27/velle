@@ -21,9 +21,13 @@ function ProductCard() {
   const cartItems = useSelector(state => state.cart);
   console.log(cartItems);
 
-  const addCart = product => {
-    dispatch(addToCart(product));
-    toast.success('add to cart');
+  const addCart = (products) => {
+    const itemObject = {
+      ...products,
+      quantity: 1
+  }
+  dispatch(addToCart(itemObject))
+  toast.success('add to cart');
   };
 
   useEffect(() => {
