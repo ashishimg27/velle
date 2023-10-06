@@ -36,24 +36,23 @@ function ProductInfo() {
 
     }, [])
 
-
-
     const dispatch = useDispatch()
     const cartItems = useSelector((state) => state.cart)
-    // console.log(cartItems)
+    console.log(cartItems, "state coming from redux")
 
     // add to cart
     const addCart = (products) => {
-        dispatch(addToCart(products))
+        const itemObject = {
+            ...products,
+            quantity: 1
+        }
+        dispatch(addToCart(itemObject))
         toast.success('add to cart');
     }
 
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
     }, [cartItems])
-
-
-
 
     return (
         <Layout>
@@ -204,4 +203,4 @@ function ProductInfo() {
     )
 }
 
-export default ProductInfo
+export default ProductInfo;

@@ -261,7 +261,7 @@ function Navbar() {
                     <span
                       className="ml-2 text-sm font-medium text-gray-700 group-"
                       style={{color: mode === 'dark' ? 'white' : ''}}>
-                      {cartItems.length}
+                      {cartItems.totalCount} 
                     </span>
                     <span className="sr-only">items in cart, view bag</span>
                   </Link>
