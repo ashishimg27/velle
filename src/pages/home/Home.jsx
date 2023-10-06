@@ -9,11 +9,13 @@ import Testimonial from '../../components/testimonial/Testimonial'
 import { Link } from 'react-router-dom'
 import NewCards from '../../components/NewCards/NewCards'
 import VoteOut from '../../components/VoteOut/VoteOut'
+import CarouselComp from '../../components/carousel/CarouselComp'
 
 
 function Home() {
   return (
     <Layout>
+      <CarouselComp />
       <HeroSection />
       <Filter />
       <NewCards/>
