@@ -130,7 +130,7 @@ function Navbar() {
             backgroundColor: mode === 'dark' ? 'rgb(62 64 66)' : '',
             color: mode === 'dark' ? 'white' : '',
           }}>
-          Get free delivery on orders over ₹300
+          Get free delivery on orders over ₹599
         </p>
 
         <nav

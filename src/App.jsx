@@ -20,6 +20,7 @@ import UpdateProduct from './pages/admin/page/UpdateProduct';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Allproducts from './pages/allproducts/Allproducts';
+import Poll from './pages/Poll/Poll';
 function App() {
   return (
     <MyState>
@@ -33,6 +34,8 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/poll" element={<Poll />} />
+
           <Route path="/dashboard" element={
             <ProtectedRouteForAdmin>
               <Dashboard />
