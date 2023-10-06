@@ -1,6 +1,7 @@
-import {Dialog, Transition} from '@headlessui/react';
-import {Fragment, useState} from 'react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function Modal({
   name,
@@ -12,6 +13,7 @@ export default function Modal({
   setPincode,
   setPhoneNumber,
   buyNow,
+  totalAmout,
 }) {
   let [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -21,12 +23,16 @@ export default function Modal({
   }
 
   async function openModal() {
-    let data = await JSON.parse(localStorage.getItem('user'));
-    console.log('dattaaaa'.data);
+    let data = await JSON.parse(localStorage.getItem("user"));
+    console.log("dattaaaa".data);
     if (!!data) {
-      setIsOpen(true);
+      if (totalAmout > 0) {
+        setIsOpen(true);
+      } else {
+        toast.error("Please Add Something First");
+      }
     } else {
-      navigate('/login');
+      navigate("/login");
     }
   }
 
@@ -36,7 +42,8 @@ export default function Modal({
         <button
           type="button"
           onClick={openModal}
-          className="w-full  bg-violet-600 py-2 text-center rounded-lg text-white font-bold ">
+          className="w-full  bg-violet-600 py-2 text-center rounded-lg text-white font-bold "
+        >
           Buy Now
         </button>
       </div>
@@ -50,7 +57,8 @@ export default function Modal({
             enterTo="opacity-100"
             leave="ease-in duration-200"
             leaveFrom="opacity-100"
-            leaveTo="opacity-0">
+            leaveTo="opacity-0"
+          >
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
@@ -63,7 +71,8 @@ export default function Modal({
                 enterTo="opacity-100 scale-100"
                 leave="ease-in duration-200"
                 leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95">
+                leaveTo="opacity-0 scale-95"
+              >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl p-2  text-left align-middle shadow-xl transition-all bg-gray-50">
                   <section className="">
                     <div className="flex flex-col items-center justify-center py-8 mx-auto  lg:py-0">
@@ -73,12 +82,13 @@ export default function Modal({
                             <div>
                               <label
                                 htmlFor="name"
-                                className="block mb-2 text-sm font-medium text-gray-900">
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                              >
                                 Enter Full Name
                               </label>
                               <input
                                 value={name}
-                                onChange={e => setName(e.target.value)}
+                                onChange={(e) => setName(e.target.value)}
                                 type="name"
                                 name="name"
                                 id="name"
@@ -89,12 +99,13 @@ export default function Modal({
                             <div>
                               <label
                                 htmlFor="email"
-                                className="block mb-2 text-sm font-medium text-gray-900">
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                              >
                                 Enter Full Address
                               </label>
                               <input
                                 value={address}
-                                onChange={e => setAddress(e.target.value)}
+                                onChange={(e) => setAddress(e.target.value)}
                                 type="text"
                                 name="address"
                                 id="address"
@@ -105,12 +116,13 @@ export default function Modal({
                             <div>
                               <label
                                 htmlFor="pincode"
-                                className="block mb-2 text-sm font-medium text-gray-900">
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                              >
                                 Enter Pincode
                               </label>
                               <input
                                 value={pincode}
-                                onChange={e => setPincode(e.target.value)}
+                                onChange={(e) => setPincode(e.target.value)}
                                 type="text"
                                 name="pincode"
                                 id="pincode"
@@ -121,12 +133,13 @@ export default function Modal({
                             <div>
                               <label
                                 htmlFor="mobileNumber"
-                                className="block mb-2 text-sm font-medium text-gray-900">
+                                className="block mb-2 text-sm font-medium text-gray-900"
+                              >
                                 Enter Mobile Number
                               </label>
                               <input
                                 value={phoneNumber}
-                                onChange={e => setPhoneNumber(e.target.value)}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
                                 type="text"
                                 name="mobileNumber"
                                 id="mobileNumber"
@@ -141,7 +154,8 @@ export default function Modal({
                               closeModal();
                             }}
                             type="button"
-                            className="focus:outline-none w-full text-white bg-violet-600 hover:bg-violet-800  outline-0 font-medium rounded-lg text-sm px-5 py-2.5 ">
+                            className="focus:outline-none w-full text-white bg-violet-600 hover:bg-violet-800  outline-0 font-medium rounded-lg text-sm px-5 py-2.5 "
+                          >
                             Order Now
                           </button>
                         </div>

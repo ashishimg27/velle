@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import {Dialog, Transition} from '@headlessui/react';
 import {RxCross2} from 'react-icons/rx';
 import {useSelector} from 'react-redux';
-
+import logo from './logo.svg'
 function Navbar() {
   const context = useContext(myContext);
   const {mode, toggleMode} = context;
@@ -168,13 +168,11 @@ function Navbar() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <Link to={'/'} className="flex">
-                  <div className="flex ">
-                    <h1
-                      className=" text-2xl font-bold text-black  px-2 py-1 rounded"
-                      style={{color: mode === 'dark' ? 'white' : ''}}>
-                      Vellee
-                    </h1>
+                <Link to={'/'} className="flex" >
+                  <div className="flex" style={{alignItems:'center'}}>
+                    <img src={logo} alt="Animated Logo" className='h-16 w-20' />
+
+                
                   </div>
                 </Link>
               </div>

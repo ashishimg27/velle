@@ -148,8 +148,30 @@ function Poll() {
             <img src={image.imageUrl} alt={`Image ${image.id}`} />
             <h1>{image.title}</h1>
             <div className="vote-buttons">
-              <button onClick={() => handleVote(image.id, "yes")}>Yes</button>
-              <button onClick={() => handleVote(image.id, "no")}>No</button>
+              <button
+                style={{
+                  padding: "5px 15px",
+                  backgroundColor: "white",
+                  border: "1px solid grey",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                }}
+                onClick={() => handleVote(image.id, "yes")}
+              >
+                <p style={{ color: "black" }}> 😍Yay!</p>
+              </button>
+              <button
+                style={{
+                  padding: "5px 15px",
+                  backgroundColor: "white",
+                  border: "1px solid grey",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                }}
+                onClick={() => handleVote(image.id, "no")}
+              >
+                <p style={{ color: "black" }}>😏Nay</p>
+              </button>
             </div>
           </div>
         ))}

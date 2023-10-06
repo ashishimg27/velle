@@ -3,7 +3,7 @@ import myContext from "../../context/data/myContext";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/cartSlice";
 import { toast } from "react-toastify";
-import './test.css'
+import "./test.css";
 function ProductCard() {
   const context = useContext(myContext);
   const {
@@ -24,10 +24,10 @@ function ProductCard() {
   const addCart = (products) => {
     const itemObject = {
       ...products,
-      quantity: 1
-  }
-  dispatch(addToCart(itemObject))
-  toast.success('add to cart');
+      quantity: 1,
+    };
+    dispatch(addToCart(itemObject));
+    toast.success("add to cart");
   };
 
   useEffect(() => {
@@ -83,7 +83,7 @@ function ProductCard() {
                         Velle
                       </h2>
                       <h1
-                         className="title-font text-lg font-medium text-gray-900 mb-3 overflow-hidden overflow-ellipsis"
+                        className="title-font text-lg font-medium text-gray-900 mb-3 overflow-hidden overflow-ellipsis"
                         style={{ color: mode === "dark" ? "white" : "" }}
                       >
                         {title}
@@ -109,7 +109,7 @@ function ProductCard() {
                           {" "}
                           ₹{price * 2}
                         </p>{" "}
-                        <p> 50%</p>
+                        <p style={{ color: "#12bd5e" }}> 50% OFF</p>
                       </p>
                       <div className=" flex justify-center">
                         <button
